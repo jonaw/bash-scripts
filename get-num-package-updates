@@ -1,0 +1,3 @@
+#!/bin/bash
+
+apt-get --just-print upgrade | grep Inst | wc -l

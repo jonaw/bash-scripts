@@ -1,0 +1,2 @@
+#!/bin/bash
+xset q | grep "DPMS is" | cut -d " " -f5 | tr '[:upper:]' '[:lower:]'

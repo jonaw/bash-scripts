@@ -1,0 +1,8 @@
+#!/bin/bash
+currentStatus=`get-dpms-status`
+
+if [ $currentStatus == "enabled" ]; then
+	turn-dpms-off
+else
+	turn-dpms-on
+fi
