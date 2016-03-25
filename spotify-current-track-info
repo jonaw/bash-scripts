@@ -1,0 +1,64 @@
+#!/bin/bash
+artist='test-artist'
+track_title='track_title'
+track_length='track_length'
+track_position='track_position'
+track_url='track_url'
+album='album'
+album_art_url='album_art_url'
+playback_status='playback_status'
+
+
+
+function get_artist
+{
+	artist=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A2 artist | grep -A 1 variant | grep string | cut -d '"' -f2)
+}
+
+function get_track_title
+{
+	track_title=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A1 title | grep variant | cut -d '"' -f2)
+}
+
+function get_track_length
+{
+	length_micro_seconds=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A1 length | grep variant | cut -d ' ' -f30)
+	length_in_seconds=$(($length_micro_seconds/1000000))
+	track_minutes=$(($(($length_micro_seconds/1000000))/60))
+	track_seconds=$(($(($length_micro_seconds/1000000))%60))
+	if [ "$track_seconds" -lt "10" ]; then
+		track_seconds="0$track_seconds"
+	fi
+
+	track_length="$track_minutes:$track_seconds"
+}
+
+function get_track_url
+{
+	track_url=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A1 url | grep variant | cut -d '"' -f2)
+}
+
+function get_album
+{
+	album=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A1 album | grep variant | cut -d '"' -f2)
+}
+
+function get_album_art_url
+{
+	album_art_url=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A1 artUrl | grep variant | cut -d '"' -f2)
+}
+
+function toString
+{
+	gen_string="$artist - $track_title"
+}
+
+get_artist
+get_track_title
+get_track_length
+get_track_url
+get_album
+get_album_art_url
+toString
+
+echo $gen_string

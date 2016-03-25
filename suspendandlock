@@ -1,0 +1,3 @@
+#!/bin/bash
+#i3lock -i ~/Pictures/footer_lodyas.png -t && sh -c 'sudo pm-suspend-hybrid'
+lock && sh -c 'sudo pm-suspend-hybrid'

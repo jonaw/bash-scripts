@@ -1,0 +1,6 @@
+#!/bin/bash
+#i3lock -i ~/Pictures/footer_lodyas.png -t; sleep 1; xset dpms force off
+
+scrot 'lockimg.png' -q 100 -cd 3 -e 'mv $f /home/jonare/tmp'
+convert /home/jonare/tmp/lockimg.png -blur 0x8 /home/jonare/tmp/lockimg.png
+i3lock -i ~/tmp/lockimg.png -t
