@@ -1,0 +1,41 @@
+#!/bin/bash
+echo "Checking for series"
+dirs_to_delete=()
+
+for series_path in /data/series/*; do
+	[ -d "${series_path}" ] || continue # if not a directory, skip
+	series_name="$(basename "${series_path}")"
+	echo "    "$series_name
+		#change path/* to deluge-data path
+	#for series_file in $series_path/*; do
+
+
+
+#	for series_file in /home/jonare/deluge-download/*; do
+#		file_name="$(basename "$series_file")"
+#		strippedFile=$(echo $file_name | tr -d ' ' | tr -d '.' | tr -d '-' | tr '[:upper:]' '[:lower:]')
+#		if [[ $strippedFile == *"$series_name"* ]]; then
+#			if [[ $file_name == *".mkv"* ]] || [[ $file_name == *".mp4"* ]] || [[ $file_name == *".avi"* ]]; then
+#				#echo $series_path
+#				#echo $series_file
+#				echo "    Found file: "$file_name" and moving"
+#				#Use $files to move to data/series/$dirname
+#				mv $series_file $series_path
+#			fi
+#		fi
+#		#echo $strippedFile
+#	done
+	for file in $(find /home/jonare/Downloads/deluge-complete -name '*.mp4' -or -name '*.mkv' -or -name '*.avi'); do
+		file_name="$(basename "$file")"
+		file_base_dir="$(dirname "$file")"
+		stripped_file_name=$(echo $file_name | tr -d ' ' | tr -d '.' | tr -d '-' | tr '[:upper:]' '[:lower:]')
+		if [[ $stripped_file_name == *"$series_name"* ]]; then
+			if [[ $file_name == *".mkv"* ]] || [[ $file_name == *".mp4"* ]] || [[ $file_name == *".avi"* ]]; then
+				echo "        Found file: "$file_name" Beginning move"
+				mv $file $series_path
+				dirs_to_delete+=($file_base_dir)
+			fi
+		fi
+	done
+done
+
